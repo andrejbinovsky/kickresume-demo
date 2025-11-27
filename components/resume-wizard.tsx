@@ -43,6 +43,8 @@ export function ResumeWizard() {
   const [open, setOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [formData, setFormData] = useState<FormData>({
     experienceLevel: "entry",
     dataSource: "upload",
@@ -57,6 +59,8 @@ export function ResumeWizard() {
     setErrors({})
     setCurrentStep(1)
     setShowSuccess(false)
+    setIsLoading(false)
+    setLoadingProgress(0)
   }
 
   const handleCancel = () => {
@@ -125,7 +129,30 @@ export function ResumeWizard() {
 
     console.log("Resume Creation Data:", result)
 
-    setShowSuccess(true)
+    // Start loading animation
+    setIsLoading(true)
+    setLoadingProgress(0)
+
+    // Simulate API call with progress
+    const progressInterval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval)
+          return 100
+        }
+        return prev + 10
+      })
+    }, 200)
+
+    // Show success after 2.5 seconds
+    setTimeout(() => {
+      clearInterval(progressInterval)
+      setLoadingProgress(100)
+      setTimeout(() => {
+        setIsLoading(false)
+        setShowSuccess(true)
+      }, 300)
+    }, 2500)
   }
 
   const handleFileUpload = (file: File | null) => {
@@ -171,7 +198,64 @@ export function ResumeWizard() {
         <Button size="lg">Create Resume</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
-        {showSuccess ? (
+        {isLoading ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>Creating Your Resume</DialogTitle>
+              <DialogDescription>
+                Please wait while we process your information...
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="py-12 flex flex-col items-center justify-center gap-6">
+              <div className="relative w-24 h-24">
+                {/* Spinning circle */}
+                <svg
+                  className="animate-spin w-24 h-24"
+                  viewBox="0 0 100 100"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    className="text-muted opacity-25"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    className="text-primary"
+                    strokeDasharray="263"
+                    strokeDashoffset={263 - (263 * loadingProgress) / 100}
+                    style={{ transition: 'stroke-dashoffset 0.2s ease' }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-foreground">{loadingProgress}%</span>
+                </div>
+              </div>
+
+              <div className="text-center space-y-2">
+                <p className="text-sm font-medium text-foreground">
+                  {loadingProgress < 30 && "Analyzing your information..."}
+                  {loadingProgress >= 30 && loadingProgress < 60 && "Generating resume content..."}
+                  {loadingProgress >= 60 && loadingProgress < 90 && "Optimizing layout..."}
+                  {loadingProgress >= 90 && "Finalizing your resume..."}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  This may take a few moments
+                </p>
+              </div>
+            </div>
+          </>
+        ) : showSuccess ? (
           <>
             <DialogHeader>
               <DialogTitle>Resume Created Successfully!</DialogTitle>
