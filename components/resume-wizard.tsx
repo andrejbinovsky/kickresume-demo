@@ -195,7 +195,7 @@ export function ResumeWizard() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="lg">Create Resume</Button>
+        <Button variant={'brand'}  size="lg">Create Resume</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         {isLoading ? (
