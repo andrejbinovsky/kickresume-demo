@@ -408,31 +408,40 @@ export function ResumeWizard() {
 
                 <TabsContent value="linkedin" className="space-y-2 mt-4">
                   <Label htmlFor="linkedin-url">LinkedIn profile URL</Label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none select-none">
-                      https://www.linkedin.com/in/
+                  <div className="min-h-[186px] flex flex-col justify-start space-y-4">
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none select-none">
+                        https://www.linkedin.com/in/
+                      </div>
+                      <Input
+                        id="linkedin-url"
+                        type="text"
+                        value={formData.linkedinUsername || ""}
+                        onChange={handleLinkedinChange}
+                        className={`pl-[194px] ${errors.linkedin ? "border-destructive" : ""}`}
+                      />
                     </div>
-                    <Input
-                      id="linkedin-url"
-                      type="text"
-                      // placeholder="yourname"
-                      value={formData.linkedinUsername || ""}
-                      onChange={handleLinkedinChange}
-                      className={`pl-[194px] ${errors.linkedin ? "border-destructive" : ""}`}
-                    />
+                    {errors.linkedin && <p className="text-sm text-destructive">{errors.linkedin}</p>}
+                    <div className="flex-1 space-y-2 text-sm text-muted-foreground">
+                      <p>
+                        Enter your LinkedIn profile username to import your professional information.
+                      </p>
+                      <p>
+                        We'll use your LinkedIn profile to automatically populate your work experience, education, skills, and other relevant details for your resume.
+                      </p>
+
+                    </div>
                   </div>
-                  {errors.linkedin && <p className="text-sm text-destructive">{errors.linkedin}</p>}
                 </TabsContent>
 
                 <TabsContent value="freeText" className="space-y-2 mt-4">
                   <Label htmlFor="free-text">Paste your resume or profile text</Label>
                   <Textarea
                     id="free-text"
-                    rows={6}
                     placeholder="Enter your resume details here..."
                     value={formData.freeText || ""}
                     onChange={handleFreeTextChange}
-                    className={errors.freeText ? "border-destructive" : ""}
+                    className={`min-h-[186px] resize-none ${errors.freeText ? "border-destructive" : ""}`}
                   />
                   {errors.freeText && <p className="text-sm text-destructive">{errors.freeText}</p>}
                 </TabsContent>
