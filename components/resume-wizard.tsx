@@ -298,8 +298,7 @@ export function ResumeWizard() {
               <div>
                 <Label className="text-base font-semibold">Resume Data Source</Label>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Choose where to get data for this resume. This is only for demo purposes and will
-                  not be uploaded anywhere.
+                  Choose where to get data for this resume.
                 </p>
               </div>
               <Tabs
